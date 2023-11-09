@@ -43,7 +43,7 @@ class Product
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comment::class)]
@@ -52,6 +52,7 @@ class Product
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable('now');
     }
 
     public function getId(): ?int
