@@ -29,4 +29,14 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function searchByCategory($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.Category', 'c')
+            ->andWhere('c.name = :value')
+            ->setParameter(':value', $value)
+            ->getQuery()
+            ->getResult();
+    }
 }
