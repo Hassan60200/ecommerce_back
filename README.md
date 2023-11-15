@@ -4,8 +4,8 @@ Création d'un back pour gérer les différentes requêtes pour le site ecommerc
 
 # Technologies et Frameworks Utilisés
 
-* Langage de programmation : PHP
-* Framework principal : Symfony
+* Langage de programmation : PHP 8
+* Framework principal : Symfony 6
 * Gestion de base de données : Doctrine
 * Authentification : JWT (JSON Web Tokens)
 * Autres librairies importantes : API Platform, Faker pour les données de test
