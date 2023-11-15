@@ -2,8 +2,7 @@
 Création d'un back pour gérer les différentes requêtes pour le site ecommerce
 
 
-#Technologies et Frameworks Utilisés
-Listez les technologies principales utilisées dans le backend. Par exemple :
+# Technologies et Frameworks Utilisés
 
 * Langage de programmation : PHP
 * Framework principal : Symfony
