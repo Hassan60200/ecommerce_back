@@ -27,4 +27,15 @@ class AuthenticationController extends AbstractController
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
         }
     }
+    #[Route('/registration', name: 'app_registration', methods: ['POST'])]
+    public function registration(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        try {
+            $user = $this->authManager->registration($data);
+            return new JsonResponse(['new_user' => $data]);
+        } catch (AuthenticationException $e) {
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
+        }
+    }
 }

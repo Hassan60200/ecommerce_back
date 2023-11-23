@@ -18,7 +18,7 @@ class ProductController extends AbstractController
         $products = '';
         if (!is_null($nameValue)) {
             $products = $productRepository->searchProduct($nameValue);
-        }elseif (!is_null($categoryValue)){
+        } elseif (!is_null($categoryValue)) {
             $products = $productRepository->searchByCategory($categoryValue);
         }
 
