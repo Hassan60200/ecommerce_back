@@ -8,42 +8,55 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
-class Product
+#[ApiResource(
+    normalizationContext: ['groups' => ['read_product']],
+    denormalizationContext: ['groups' => ['write_product']],
+)]class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_product', 'write_product'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['read_product', 'write_product'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read_product', 'write_product'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_product', 'write_product'])]
     private ?Category $Category = null;
 
     #[ORM\Column]
+    #[Groups(['read_product', 'write_product'])]
     private ?float $price = null;
 
     #[ORM\Column]
+    #[Groups(['read_product', 'write_product'])]
     private ?float $weight = null;
 
     #[ORM\Column]
+    #[Groups(['read_product', 'write_product'])]
     private ?bool $isAvailaible = null;
 
     #[ORM\Column]
+    #[Groups(['read_product', 'write_product'])]
     private ?bool $isBest = null;
 
     #[ORM\Column]
+    #[Groups(['read_product', 'write_product'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_product', 'write_product'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comment::class)]
