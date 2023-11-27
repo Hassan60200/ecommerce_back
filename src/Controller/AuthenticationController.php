@@ -34,7 +34,7 @@ class AuthenticationController extends AbstractController
         $data = json_decode($request->getContent(), true);
         try {
             $user = $this->authManager->registration($data);
-            return new JsonResponse(['message' => 'User registered successfully'], Response::HTTP_OK);
+            return new JsonResponse(['message' => 'User registered successfully', 'user' => $data], Response::HTTP_OK);
         } catch (Exception $e) {
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
