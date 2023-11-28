@@ -3,6 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\AdminController;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,8 +18,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(
+            uriTemplate: '/admin/product/new',
+            controller: AdminController::class,
+            name: 'admin_add_product'
+        ),
+        new Put(),
+        new Delete(),
+    ],
     normalizationContext: ['groups' => ['read_product']],
-    denormalizationContext: ['groups' => ['write_product']],
+    denormalizationContext: ['groups' => ['write_product']]
 )]class Product
 {
     #[ORM\Id]
