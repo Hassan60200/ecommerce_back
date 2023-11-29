@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\AdminController;
+use App\Controller\ProductController;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,14 +21,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(),
-        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/products/',
+            controller: ProductController::class,
+            name: 'product_index'
+        ),
+        new GetCollection(
+            uriTemplate: '/admin/products/',
+            controller: AdminController::class,
+            name: 'app_admin_products'
+        ),
         new Post(
             uriTemplate: '/admin/product/new',
             controller: AdminController::class,
             name: 'admin_add_product'
         ),
-        new Put(),
-        new Delete(),
+        new Put(
+            uriTemplate: '/admin/product/edit/:id',
+            controller: AdminController::class,
+            name: 'admin_edit_product'
+        ),
+        new Delete(
+            uriTemplate: '/admin/product/delete/:id',
+            controller: AdminController::class,
+            name: 'admin_delete_product'
+        ),
     ],
     normalizationContext: ['groups' => ['read_product']],
     denormalizationContext: ['groups' => ['write_product']]

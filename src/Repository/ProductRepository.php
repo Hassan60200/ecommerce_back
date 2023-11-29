@@ -39,4 +39,17 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getProductIsAvailaible(){
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isAvailaible = true')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function getAllProducts(){
+        return $this->createQueryBuilder('p')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
