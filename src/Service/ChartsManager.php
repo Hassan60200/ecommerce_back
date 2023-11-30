@@ -25,4 +25,11 @@ class ChartsManager
 
         return $data;
     }
+
+    public function countNewUser(){
+        $countUsers = $this->userRepository->countNewUserPerDay();
+
+
+        return $countUsers;
+    }
 }

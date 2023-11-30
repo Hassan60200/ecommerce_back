@@ -24,7 +24,9 @@ class AdminController extends AbstractController
     #[Route('/', name: 'app_admin', methods: "GET")]
     public function index(): Response
     {
-        $data = $this->chartsManager->getCountsDatas();
+        $data = [];
+        $data['stats'] = $this->chartsManager->getCountsDatas();
+        $data['chartsUsers'] = $this->chartsManager->countNewUser();
 
         return new JsonResponse($data, 200);
     }

@@ -29,6 +29,7 @@ class AppFixtures extends Fixture
                 ->setFirstName($this->faker->firstName)
                 ->setPassword($this->passwordHasher->hashPassword($user, 'adminPassword'))
                 ->setRoles(['ROLE_ADMIN'])
+                ->setCreatedAt(new \DateTimeImmutable('now'))
                 ->setEmail($this->faker->email);
             $manager->persist($user);
         }
