@@ -21,11 +21,19 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    public function getCategoryName($value){
+    public function getCategoryName($value)
+    {
         return $this->createQueryBuilder('c')
             ->andWhere('c.name = :value')
             ->setParameter(':value', $value)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function getAllCategories(): array|float|int|string
+    {
+        return $this->createQueryBuilder('c')
+            ->getQuery()
+            ->getArrayResult();
     }
 }

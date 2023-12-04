@@ -30,17 +30,17 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function searchByCategory($value)
+    public function searchByCategory($value): array|float|int|string
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.Category', 'c')
             ->andWhere('c.name = :value')
             ->setParameter(':value', $value)
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
     }
 
-    public function getProductIsAvailaible()
+    public function getProductIsAvailaible(): array|float|int|string
     {
         return $this->createQueryBuilder('p')
             ->select('p', 'c')
@@ -50,7 +50,7 @@ class ProductRepository extends ServiceEntityRepository
             ->getArrayResult();
     }
 
-    public function getAllProducts()
+    public function getAllProducts(): array|float|int|string
     {
         return $this->createQueryBuilder('p')
             ->getQuery()

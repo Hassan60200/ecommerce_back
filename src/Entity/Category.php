@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\AdminController;
+use App\Controller\CategoryController;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,11 +20,39 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
     operations: [
-      new Get(),
-      new GetCollection(),
-],
-    normalizationContext: ['groups' => ['read_product']],
-    denormalizationContext: ['groups' => ['write_product']]
+        new Get(
+            uriTemplate: '/category/:id',
+            controller: CategoryController::class,
+            name: 'app_category_show'
+        ),
+        new GetCollection(
+            uriTemplate: '/categories/',
+            controller: CategoryController::class,
+            name: 'app_category'
+        ),
+        new GetCollection(
+            uriTemplate: '/admin/category/',
+            controller: AdminController::class,
+            name: 'admin_index_category'
+        ),
+        new Post(
+            uriTemplate: '/admin/category/add',
+            controller: AdminController::class,
+            name: 'admin_add_category'
+        ),
+        new Put(
+            uriTemplate: '/admin/category/edit/:id',
+            controller: AdminController::class,
+            name: 'admin_edit_category'
+        ),
+        new Delete(
+            uriTemplate: '/admin/category/delete/:id',
+            controller: AdminController::class,
+            name: 'admin_delete_category'
+        ),
+    ],
+    normalizationContext: ['groups' => ['read_category']],
+    denormalizationContext: ['groups' => ['write_category']]
 )]
 class Category
 {

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
@@ -93,5 +94,50 @@ class AdminController extends AbstractController
         $this->manager->flush();
 
         return new JsonResponse('Un nouveau produit a été ajouté', 200);
+    }
+
+    #[Route('/category/', name: 'admin_index_category', methods: 'GET')]
+    public function categoryIndex(): JsonResponse
+    {
+        $category = $this->categoryRepository->getAllCategories();
+
+        return new JsonResponse($category, 200);
+    }
+
+    #[Route('/category/add', name: 'admin_add_category', methods: 'POST')]
+    public function categoryNew(Request $request): JsonResponse
+    {
+        $content = json_decode($request->getContent());
+        $category = new Category();
+        $category->setName($content->name)
+            ->setDescription($content->description);
+
+        $this->manager->persist($category);
+        $this->manager->flush();
+
+        return new JsonResponse('Une nouvelle catégorie a été ajouté', 200);
+    }
+
+    #[Route('/category/edit/{id}', name: 'admin_edit_category', methods: 'PUT')]
+    public function categoryEdit(Request $request): JsonResponse
+    {
+        $content = json_decode($request->getContent());
+        $category = $this->categoryRepository->find($request->attributes->get('id'));
+        $category->setName($content->name)
+            ->setDescription($content->description);
+
+        $this->manager->flush();
+
+        return new JsonResponse('La catégorie n°'.$category->getId().' a été modifié', 200);
+    }
+
+    #[Route('/category/delete/{id}', name: 'admin_delete_category', methods: 'DELETE')]
+    public function categoryDelete(Request $request): JsonResponse
+    {
+        $category = $this->categoryRepository->find($request->attributes->get('id'));
+        $this->manager->remove($category);
+        $this->manager->flush();
+
+        return new JsonResponse('Vous venez de supprimer une catégorie', 200);
     }
 }
