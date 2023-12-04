@@ -5,18 +5,16 @@ namespace App\Service;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ChartsManager
 {
-    public function __construct(private readonly OrderRepository   $orderRepository,
-                                private readonly ProductRepository $productRepository,
-                                private readonly UserRepository    $userRepository)
+    public function __construct(private readonly OrderRepository $orderRepository,
+        private readonly ProductRepository $productRepository,
+        private readonly UserRepository $userRepository)
     {
-
     }
 
-    public function getCountsDatas()
+    public function getCountsDatas(): array
     {
         $data = [];
         $data['user'] = count($this->userRepository->findAll());
@@ -26,10 +24,8 @@ class ChartsManager
         return $data;
     }
 
-    public function countNewUser(){
-        $countUsers = $this->userRepository->countNewUserPerDay();
-
-
-        return $countUsers;
+    public function countNewUser(): float|array|int|string
+    {
+        return $this->userRepository->countNewUserPerDay();
     }
 }

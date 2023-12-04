@@ -42,10 +42,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function countNewUserPerDay(): array|float|int|string
     {
         return $this->createQueryBuilder('u')
-            ->select('DATE_FORMAT(u.createdAt, \'%Y-%m-%d\') as creationDate, COUNT(u.id) as userCount')
+            ->select('DATE_FORMAT(u.createdAt, \'%d-%m-%Y \') as creationDate, COUNT(u.id) as userCount')
             ->groupBy('creationDate')
             ->getQuery()
             ->getResult();
     }
-
 }

@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -21,7 +20,7 @@ class AdminController extends AbstractController
     {
     }
 
-    #[Route('/', name: 'app_admin', methods: "GET")]
+    #[Route('/', name: 'app_admin', methods: 'GET')]
     public function index(): Response
     {
         $data = [];
@@ -31,7 +30,7 @@ class AdminController extends AbstractController
         return new JsonResponse($data, 200);
     }
 
-    #[Route('/products', name: 'app_admin_products', methods: "GET")]
+    #[Route('/products', name: 'app_admin_products', methods: 'GET')]
     public function indexProduct(): Response
     {
         $product = $this->productRepository->getAllProducts();
@@ -39,7 +38,7 @@ class AdminController extends AbstractController
         return new JsonResponse($product, 200);
     }
 
-    #[Route('/product/new', name: 'admin_add_product', methods: "POST")]
+    #[Route('/product/new', name: 'admin_add_product', methods: 'POST')]
     public function newProduct(Request $request): Response
     {
         $content = json_decode($request->getContent());
@@ -58,7 +57,7 @@ class AdminController extends AbstractController
         return new JsonResponse('Un nouveau produit a été ajouté', 200);
     }
 
-    #[Route('/product/edit/{id}', name: 'admin_edit_product', methods: "PUT")]
+    #[Route('/product/edit/{id}', name: 'admin_edit_product', methods: 'PUT')]
     public function editProduct(Request $request): Response
     {
         $content = json_decode($request->getContent());
@@ -77,7 +76,7 @@ class AdminController extends AbstractController
         return new JsonResponse('Un nouveau produit a été ajouté', 200);
     }
 
-    #[Route('/product/delete/{id}', name: 'admin_delete_product', methods: "DELETE")]
+    #[Route('/product/delete/{id}', name: 'admin_delete_product', methods: 'DELETE')]
     public function deleteProduct(Request $request): Response
     {
         $content = json_decode($request->getContent());

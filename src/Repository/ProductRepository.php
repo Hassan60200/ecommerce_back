@@ -40,14 +40,18 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getProductIsAvailaible(){
+    public function getProductIsAvailaible()
+    {
         return $this->createQueryBuilder('p')
+            ->select('p', 'c')
+            ->innerJoin('p.Category', 'c')
             ->andWhere('p.isAvailaible = true')
             ->getQuery()
             ->getArrayResult();
     }
 
-    public function getAllProducts(){
+    public function getAllProducts()
+    {
         return $this->createQueryBuilder('p')
             ->getQuery()
             ->getArrayResult();
