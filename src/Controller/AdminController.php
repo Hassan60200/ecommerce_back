@@ -62,7 +62,7 @@ class AdminController extends AbstractController
     public function editProduct(Request $request): Response
     {
         $content = json_decode($request->getContent());
-        $product = new Product();
+        $product = $this->productRepository->find($request->attributes->get('id'));
         $product->setTitle($content->title)
             ->setDescription($content->description)
             ->setCategory($this->categoryRepository->find($content->category_id))
@@ -71,29 +71,19 @@ class AdminController extends AbstractController
             ->setIsBest($content->isBest)
             ->setIsAvailaible($content->isAvailaible);
 
-        $this->manager->persist($product);
         $this->manager->flush();
 
-        return new JsonResponse('Un nouveau produit a été ajouté', 200);
+        return new JsonResponse('Le produit n°'.$product->getTitle().' a été modifié', 200);
     }
 
     #[Route('/product/delete/{id}', name: 'admin_delete_product', methods: 'DELETE')]
     public function deleteProduct(Request $request): Response
     {
-        $content = json_decode($request->getContent());
-        $product = new Product();
-        $product->setTitle($content->title)
-            ->setDescription($content->description)
-            ->setCategory($this->categoryRepository->find($content->category_id))
-            ->setWeight($content->weight)
-            ->setPrice($content->price)
-            ->setIsBest($content->isBest)
-            ->setIsAvailaible($content->isAvailaible);
-
-        $this->manager->persist($product);
+        $product = $this->productRepository->find($request->attributes->get('id'));
+        $this->manager->remove($product);
         $this->manager->flush();
 
-        return new JsonResponse('Un nouveau produit a été ajouté', 200);
+        return new JsonResponse('Un produit a été supprimé', 200);
     }
 
     #[Route('/category/', name: 'admin_index_category', methods: 'GET')]
