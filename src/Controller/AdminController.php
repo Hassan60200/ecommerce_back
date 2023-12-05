@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/admin')]
+//#[Route('/admin')]
 class AdminController extends AbstractController
 {
     public function __construct(private readonly ChartsManager $chartsManager, private readonly ProductRepository $productRepository, private readonly EntityManagerInterface $manager, private readonly CategoryRepository $categoryRepository)
@@ -35,6 +35,22 @@ class AdminController extends AbstractController
     public function indexProduct(): Response
     {
         $product = $this->productRepository->getAllProducts();
+
+        if (!$product) {
+            return new JsonResponse('Not product found', 404);
+        }
+
+        return new JsonResponse($product, 200);
+    }
+
+    #[Route('/product/{id}', name: 'admin_show_product', methods: 'GET')]
+    public function productShow($id): JsonResponse
+    {
+        $product = $this->productRepository->findOneBy(['id' => $id]);
+
+        if (!$product) {
+            return new JsonResponse(['error' => 'Product not found'], 404);
+        }
 
         return new JsonResponse($product, 200);
     }
@@ -86,48 +102,4 @@ class AdminController extends AbstractController
         return new JsonResponse('Un produit a été supprimé', 200);
     }
 
-    #[Route('/category/', name: 'admin_index_category', methods: 'GET')]
-    public function categoryIndex(): JsonResponse
-    {
-        $category = $this->categoryRepository->getAllCategories();
-
-        return new JsonResponse($category, 200);
-    }
-
-    #[Route('/category/add', name: 'admin_add_category', methods: 'POST')]
-    public function categoryNew(Request $request): JsonResponse
-    {
-        $content = json_decode($request->getContent());
-        $category = new Category();
-        $category->setName($content->name)
-            ->setDescription($content->description);
-
-        $this->manager->persist($category);
-        $this->manager->flush();
-
-        return new JsonResponse('Une nouvelle catégorie a été ajouté', 200);
-    }
-
-    #[Route('/category/edit/{id}', name: 'admin_edit_category', methods: 'PUT')]
-    public function categoryEdit(Request $request): JsonResponse
-    {
-        $content = json_decode($request->getContent());
-        $category = $this->categoryRepository->find($request->attributes->get('id'));
-        $category->setName($content->name)
-            ->setDescription($content->description);
-
-        $this->manager->flush();
-
-        return new JsonResponse('La catégorie n°'.$category->getId().' a été modifié', 200);
-    }
-
-    #[Route('/category/delete/{id}', name: 'admin_delete_category', methods: 'DELETE')]
-    public function categoryDelete(Request $request): JsonResponse
-    {
-        $category = $this->categoryRepository->find($request->attributes->get('id'));
-        $this->manager->remove($category);
-        $this->manager->flush();
-
-        return new JsonResponse('Vous venez de supprimer une catégorie', 200);
-    }
 }

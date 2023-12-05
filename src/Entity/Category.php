@@ -21,34 +21,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(
-            uriTemplate: '/category/:id',
-            controller: CategoryController::class,
-            name: 'app_category_show'
+//            uriTemplate: '/category/:id',
+//            controller: CategoryController::class,
+//            name: 'app_category_show'
         ),
         new GetCollection(
-            uriTemplate: '/categories/',
-            controller: CategoryController::class,
-            name: 'app_category'
+//            uriTemplate: '/categories/',
+//            controller: CategoryController::class,
+//            name: 'app_category'
+        ),
+        new Get(
+            uriTemplate: '/admin/categories/{id}/',
         ),
         new GetCollection(
-            uriTemplate: '/admin/category/',
-            controller: AdminController::class,
-            name: 'admin_index_category'
+            uriTemplate: '/admin/categories/',
         ),
         new Post(
-            uriTemplate: '/admin/category/add',
-            controller: AdminController::class,
-            name: 'admin_add_category'
+            uriTemplate: '/admin/categories/add',
         ),
         new Put(
-            uriTemplate: '/admin/category/edit/:id',
-            controller: AdminController::class,
-            name: 'admin_edit_category'
+            uriTemplate: '/admin/categories/edit/{id}',
         ),
         new Delete(
-            uriTemplate: '/admin/category/delete/:id',
-            controller: AdminController::class,
-            name: 'admin_delete_category'
+            uriTemplate: '/admin/categories/delete/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['read_category']],
@@ -59,17 +54,18 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read_product', 'write_product'])]
+    #[Groups(['read_product', 'write_product', 'read_category'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 25)]
-    #[Groups(['read_product', 'write_product'])]
+    #[Groups(['read_product', 'write_product', 'read_category', 'write_category'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read_category', 'write_category'])]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Product::class)]
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Product::class, cascade: ['remove'])]
     private Collection $products;
 
     #[ORM\Column]

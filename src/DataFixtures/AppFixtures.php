@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Repository\CategoryRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -17,13 +16,11 @@ class AppFixtures extends Fixture
     public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly CategoryRepository $categoryRepository)
     {
         $this->faker = Factory::create('fr_FR');
-
     }
 
     public function load(ObjectManager $manager): void
     {
-
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $user = new User();
             $user->setLastName($this->faker->lastName)
                 ->setFirstName($this->faker->firstName)
@@ -41,7 +38,7 @@ class AppFixtures extends Fixture
             'Maison & Jardin',
             'Jouets & Jeux',
             'Sport & Plein Air',
-            'Beauté & Santé'
+            'Beauté & Santé',
         ];
         $categories = [];
         foreach ($categoriesList as $categoryName) {
@@ -53,7 +50,7 @@ class AppFixtures extends Fixture
         }
 
         $products = [];
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 50; ++$i) {
             $product = $this->newProduct($categories);
             $manager->persist($product);
             $products[] = $product;
