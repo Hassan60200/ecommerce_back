@@ -24,6 +24,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/products/',
         ),
+        new Get(
+            uriTemplate: '/admin/products/{id}',
+        ),
         new GetCollection(
             uriTemplate: '/admin/products/',
         ),

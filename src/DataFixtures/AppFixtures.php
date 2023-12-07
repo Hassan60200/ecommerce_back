@@ -94,7 +94,6 @@ class AppFixtures extends Fixture
             ->setIsBest($this->faker->boolean());
     }
 
-
     public function newComment(array $customers, array $products): Comment
     {
         return (new Comment())
@@ -102,6 +101,6 @@ class AppFixtures extends Fixture
             ->setProduct($this->faker->randomElement($products))
             ->setCreatedAt(new \DateTimeImmutable('now'))
             ->setMessage($this->faker->text)
-            ->setRating(5);
+            ->setRating(mt_rand(0, 5));
     }
 }
