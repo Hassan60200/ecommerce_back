@@ -65,7 +65,7 @@ class Category
     #[Groups(['read_category', 'write_category'])]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Product::class, cascade: ['remove'])]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class, cascade: ['remove'])]
     private Collection $products;
 
     #[ORM\Column]

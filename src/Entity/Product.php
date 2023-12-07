@@ -56,9 +56,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(referencedColumnName: "id" ,nullable: false)]
-    #[Groups(['read_product', 'write_product'])]
-    private ?Category $Category = null;
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_product', 'write_product', 'read_category', 'write_category'])]
+    private ?Category $category = null;
 
     #[ORM\Column]
     #[Groups(['read_product', 'write_product'])]
@@ -128,12 +128,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     public function getCategory(): ?Category
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(?Category $Category): static
+    public function setCategory(?Category $category): static
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }
