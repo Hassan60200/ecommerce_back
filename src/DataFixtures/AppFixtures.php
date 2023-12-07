@@ -13,6 +13,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private \Faker\Generator $faker;
+
     public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly CategoryRepository $categoryRepository)
     {
         $this->faker = Factory::create('fr_FR');

@@ -56,12 +56,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(referencedColumnName: "id" ,nullable: false)]
     #[Groups(['read_product', 'write_product'])]
     private ?Category $Category = null;
 
     #[ORM\Column]
-    #[Groups(['read_product', 'write_product', 'read_category', 'write_category'])]
+    #[Groups(['read_product', 'write_product'])]
     private ?float $price = null;
 
     #[ORM\Column]
