@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
@@ -33,6 +34,19 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        $customers = [];
+        for ($j = 0; $j < 5; ++$j) {
+            $client = new User();
+            $client->setLastName($this->faker->lastName)
+                ->setFirstName($this->faker->firstName)
+                ->setPassword($this->passwordHasher->hashPassword($client, 'userPassword'))
+                ->setRoles(['ROLE_USER'])
+                ->setCreatedAt(new \DateTimeImmutable('now'))
+                ->setEmail($this->faker->email);
+            $manager->persist($client);
+            $customers[] = $client;
+        }
+
         $categoriesList = [
             'Électronique',
             'Livres',
@@ -57,6 +71,14 @@ class AppFixtures extends Fixture
             $manager->persist($product);
             $products[] = $product;
         }
+
+        $comments = [];
+        for ($c = 0; $c < 15; ++$c) {
+            $comment = $this->newComment($customers, $products);
+            $manager->persist($comment);
+            $comments[] = $comment;
+        }
+
         $manager->flush();
     }
 
@@ -70,5 +92,16 @@ class AppFixtures extends Fixture
             ->setIsAvailaible($this->faker->boolean())
             ->setCategory($this->faker->randomElement($categories))
             ->setIsBest($this->faker->boolean());
+    }
+
+
+    public function newComment(array $customers, array $products): Comment
+    {
+        return (new Comment())
+            ->setUser($this->faker->randomElement($customers))
+            ->setProduct($this->faker->randomElement($products))
+            ->setCreatedAt(new \DateTimeImmutable('now'))
+            ->setMessage($this->faker->text)
+            ->setRating(5);
     }
 }

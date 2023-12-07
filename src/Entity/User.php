@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,9 +17,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource(
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/user/{id}',
+    ),
+    new Put(
+        uriTemplate: '/users/edit/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/users/delete/{id}',
+    ),
+    new GetCollection(
+        uriTemplate: '/admin/users/',
+    ),
+    new Get(
+        uriTemplate: '/admin/users/{id}',
+    ),
+    new Put(
+        uriTemplate: '/admin/users/edit/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/admin/users/delete/{id}',
+    ),
+],
     normalizationContext: ['groups' => ['user:read']],
-)]class User implements UserInterface, PasswordAuthenticatedUserInterface
+)] class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

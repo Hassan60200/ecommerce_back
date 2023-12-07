@@ -3,12 +3,47 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
-#[ApiResource]
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/comments/{id}',
+    ),
+    new GetCollection(
+        uriTemplate: '/comments/',
+    ),
+    new Post(
+        uriTemplate: '/comments/new',
+    ),
+    new Put(
+        uriTemplate: '/comments/edit/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/comments/delete/{id}',
+    ),
+    new GetCollection(
+        uriTemplate: '/admin/comments/',
+    ),
+    new Get(
+        uriTemplate: '/admin/comments/{id}',
+    ),
+    new Put(
+        uriTemplate: '/admin/comments/edit/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/admin/comments/delete/{id}',
+    ),
+],
+    normalizationContext: ['groups' => ['user:read']],
+)]
 class Comment
 {
     #[ORM\Id]
