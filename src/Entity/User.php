@@ -71,7 +71,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     #[Groups('user:read')]
     private ?string $lastName = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, cascade: ['remove'])]
     private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class, orphanRemoval: true)]

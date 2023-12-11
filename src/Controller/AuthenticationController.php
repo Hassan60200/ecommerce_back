@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use App\Service\AuthentificationManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,13 +18,15 @@ class AuthenticationController extends AbstractController
     }
 
     #[Route('/login', name: 'app_authentication')]
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, UserRepository $userRepository): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        $user = $userRepository->findOneBy(['email' => $data['email']]);
+
         try {
             $token = $this->authManager->login($data['email'], $data['password']);
 
-            return new JsonResponse(['token' => $token]);
+            return new JsonResponse(['token' => $token, 'rôles' => $user->getRoles()]);
         } catch (AuthenticationException $e) {
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
         }
