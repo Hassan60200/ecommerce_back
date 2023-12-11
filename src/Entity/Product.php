@@ -8,8 +8,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\AdminController;
-use App\Controller\ProductController;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,36 +18,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(),
+        new Get(
+            uriTemplate: '/products/{id}',
+        ),
         new GetCollection(
             uriTemplate: '/products/',
-            controller: ProductController::class,
-            name: 'product_index'
+        ),
+        new Get(
+            uriTemplate: '/admin/products/{id}',
         ),
         new GetCollection(
             uriTemplate: '/admin/products/',
-            controller: AdminController::class,
-            name: 'app_admin_products'
         ),
         new Post(
-            uriTemplate: '/admin/product/new',
-            controller: AdminController::class,
-            name: 'admin_add_product'
+            uriTemplate: '/admin/products/new',
         ),
         new Put(
-            uriTemplate: '/admin/product/edit/:id',
-            controller: AdminController::class,
-            name: 'admin_edit_product'
+            uriTemplate: '/admin/products/edit/{id}',
         ),
         new Delete(
-            uriTemplate: '/admin/product/delete/:id',
-            controller: AdminController::class,
-            name: 'admin_delete_product'
+            uriTemplate: '/admin/products/delete/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['read_product']],
     denormalizationContext: ['groups' => ['write_product']]
-)]class Product
+)] class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -67,8 +60,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read_product', 'write_product'])]
-    private ?Category $Category = null;
+    #[Groups(['read_product', 'write_product', 'read_category', 'write_category'])]
+    private ?Category $category = null;
 
     #[ORM\Column]
     #[Groups(['read_product', 'write_product'])]
@@ -138,12 +131,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     public function getCategory(): ?Category
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(?Category $Category): static
+    public function setCategory(?Category $category): static
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }
