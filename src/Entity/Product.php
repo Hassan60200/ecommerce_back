@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,9 +17,32 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/products/{id}',
+        ),
+        new GetCollection(
+            uriTemplate: '/products/',
+        ),
+        new Get(
+            uriTemplate: '/admin/products/{id}',
+        ),
+        new GetCollection(
+            uriTemplate: '/admin/products/',
+        ),
+        new Post(
+            uriTemplate: '/admin/products/new',
+        ),
+        new Put(
+            uriTemplate: '/admin/products/edit/{id}',
+        ),
+        new Delete(
+            uriTemplate: '/admin/products/delete/{id}',
+        ),
+    ],
     normalizationContext: ['groups' => ['read_product']],
-    denormalizationContext: ['groups' => ['write_product']],
-)]class Product
+    denormalizationContext: ['groups' => ['write_product']]
+)] class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,8 +60,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read_product', 'write_product'])]
-    private ?Category $Category = null;
+    #[Groups(['read_product', 'write_product', 'read_category', 'write_category'])]
+    private ?Category $category = null;
 
     #[ORM\Column]
     #[Groups(['read_product', 'write_product'])]
@@ -103,12 +131,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     public function getCategory(): ?Category
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(?Category $Category): static
+    public function setCategory(?Category $category): static
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }

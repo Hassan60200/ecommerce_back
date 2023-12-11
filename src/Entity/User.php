@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,9 +17,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource(
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/user/{id}',
+    ),
+    new Put(
+        uriTemplate: '/users/edit/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/users/delete/{id}',
+    ),
+    new GetCollection(
+        uriTemplate: '/admin/users/',
+    ),
+    new Get(
+        uriTemplate: '/admin/users/{id}',
+    ),
+    new Put(
+        uriTemplate: '/admin/users/edit/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/admin/users/delete/{id}',
+    ),
+],
     normalizationContext: ['groups' => ['user:read']],
-)]class User implements UserInterface, PasswordAuthenticatedUserInterface
+)] class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -45,11 +71,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
     #[Groups('user:read')]
     private ?string $lastName = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, cascade: ['remove'])]
     private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class, orphanRemoval: true)]
     private Collection $orders;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
@@ -207,6 +239,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 $order->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

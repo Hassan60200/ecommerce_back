@@ -4,13 +4,11 @@ namespace App\Service;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AuthentificationManager
 {
@@ -51,20 +49,18 @@ class AuthentificationManager
             ->setEmail($data['email']);
 
         if ($this->emailExists($data['email'])) {
-            throw new Exception('L\'adresse e-mail est déjà utilisée.');
+            throw new \Exception('L\'adresse e-mail est déjà utilisée.');
         }
         $this->manager->persist($user);
         $this->manager->flush();
+
         return new JsonResponse($user, 200);
     }
-
 
     private function emailExists(string $email): bool
     {
         $existingUser = $this->manager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        return $existingUser !== null;
+        return null !== $existingUser;
     }
-
-
 }

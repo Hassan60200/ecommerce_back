@@ -3,34 +3,48 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private \Faker\Generator $faker;
+
     public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly CategoryRepository $categoryRepository)
     {
         $this->faker = Factory::create('fr_FR');
-
     }
 
     public function load(ObjectManager $manager): void
     {
-
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $user = new User();
             $user->setLastName($this->faker->lastName)
                 ->setFirstName($this->faker->firstName)
                 ->setPassword($this->passwordHasher->hashPassword($user, 'adminPassword'))
                 ->setRoles(['ROLE_ADMIN'])
+                ->setCreatedAt(new \DateTimeImmutable('now'))
                 ->setEmail($this->faker->email);
             $manager->persist($user);
+        }
+
+        $customers = [];
+        for ($j = 0; $j < 5; ++$j) {
+            $client = new User();
+            $client->setLastName($this->faker->lastName)
+                ->setFirstName($this->faker->firstName)
+                ->setPassword($this->passwordHasher->hashPassword($client, 'userPassword'))
+                ->setRoles(['ROLE_USER'])
+                ->setCreatedAt(new \DateTimeImmutable('now'))
+                ->setEmail($this->faker->email);
+            $manager->persist($client);
+            $customers[] = $client;
         }
 
         $categoriesList = [
@@ -40,7 +54,7 @@ class AppFixtures extends Fixture
             'Maison & Jardin',
             'Jouets & Jeux',
             'Sport & Plein Air',
-            'Beauté & Santé'
+            'Beauté & Santé',
         ];
         $categories = [];
         foreach ($categoriesList as $categoryName) {
@@ -52,11 +66,19 @@ class AppFixtures extends Fixture
         }
 
         $products = [];
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 50; ++$i) {
             $product = $this->newProduct($categories);
             $manager->persist($product);
             $products[] = $product;
         }
+
+        $comments = [];
+        for ($c = 0; $c < 15; ++$c) {
+            $comment = $this->newComment($customers, $products);
+            $manager->persist($comment);
+            $comments[] = $comment;
+        }
+
         $manager->flush();
     }
 
@@ -70,5 +92,15 @@ class AppFixtures extends Fixture
             ->setIsAvailaible($this->faker->boolean())
             ->setCategory($this->faker->randomElement($categories))
             ->setIsBest($this->faker->boolean());
+    }
+
+    public function newComment(array $customers, array $products): Comment
+    {
+        return (new Comment())
+            ->setUser($this->faker->randomElement($customers))
+            ->setProduct($this->faker->randomElement($products))
+            ->setCreatedAt(new \DateTimeImmutable('now'))
+            ->setMessage($this->faker->text)
+            ->setRating(mt_rand(0, 5));
     }
 }
