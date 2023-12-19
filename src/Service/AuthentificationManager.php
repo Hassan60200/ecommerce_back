@@ -26,7 +26,6 @@ class AuthentificationManager
     public function login($username, $password): string
     {
         $user = $this->userProvider->loadUserByIdentifier($username);
-
         if (!$user || !$this->passwordEncoder->isPasswordValid($user, $password)) {
             throw new AuthenticationException('Invalid credentials.');
         }
@@ -46,6 +45,7 @@ class AuthentificationManager
             ->setFirstName($data['firstName'])
             ->setPassword($this->passwordHasher->hashPassword($user, $data['password']))
             ->setRoles(['ROLE_CUSTOMER'])
+            ->setCreatedAt(new \DateTimeImmutable('now'))
             ->setEmail($data['email']);
 
         if ($this->emailExists($data['email'])) {

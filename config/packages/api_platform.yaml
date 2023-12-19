@@ -1,7 +1,8 @@
 api_platform:
-    title: Hello API Platform
+    title: CpasChère
     version: 1.0.0
     formats:
+        jsonld:   ['application/ld+json']
         json: ['application/json']
     docs_formats:
         jsonld: ['application/ld+json']

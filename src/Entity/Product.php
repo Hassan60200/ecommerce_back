@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -42,7 +44,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: ['groups' => ['read_product']],
     denormalizationContext: ['groups' => ['write_product']]
-)] class Product
+)]
+#[ApiFilter(
+    BooleanFilter::class, properties: ['isAvailaible']
+)]
+class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

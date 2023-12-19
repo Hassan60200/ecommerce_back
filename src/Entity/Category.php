@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\AdminController;
 use App\Controller\CategoryController;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,14 +23,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(
-//            uriTemplate: '/category/:id',
-//            controller: CategoryController::class,
-//            name: 'app_category_show'
+        //            uriTemplate: '/category/:id',
+        //            controller: CategoryController::class,
+        //            name: 'app_category_show'
         ),
         new GetCollection(
-//            uriTemplate: '/categories/',
-//            controller: CategoryController::class,
-//            name: 'app_category'
+        //            uriTemplate: '/categories/',
+        //            controller: CategoryController::class,
+        //            name: 'app_category'
         ),
         new Get(
             uriTemplate: '/admin/categories/{id}/',
@@ -48,6 +50,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: ['groups' => ['read_category']],
     denormalizationContext: ['groups' => ['write_category']]
+)]
+#[ApiFilter(
+    DateFilter::class, properties: ['createdAt' => 'asc']
 )]
 class Category
 {

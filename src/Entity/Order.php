@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +16,25 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
-#[ApiResource]
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/order/{id}',
+    ),
+    new Post(
+        uriTemplate: '/orders/new',
+    ),
+    new GetCollection(
+        uriTemplate: '/admin/orders/',
+    ),
+    new Get(
+        uriTemplate: '/admin/orders/{id}',
+    ),
+    new Delete(
+        uriTemplate: '/admin/orders/delete/{id}',
+    ),
+],
+    normalizationContext: ['groups' => ['order:read']],
+)]
 class Order
 {
     #[ORM\Id]
@@ -53,6 +76,8 @@ class Order
     public function __construct()
     {
         $this->product = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable('now');
+        $this->paymentAt = new \DateTimeImmutable('now');
     }
 
     public function getId(): ?int

@@ -26,7 +26,7 @@ class AuthenticationController extends AbstractController
         try {
             $token = $this->authManager->login($data['email'], $data['password']);
 
-            return new JsonResponse(['token' => $token, 'rôles' => $user->getRoles()]);
+            return new JsonResponse(['token' => $token, 'roles' => $user->getRoles()]);
         } catch (AuthenticationException $e) {
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
         }
